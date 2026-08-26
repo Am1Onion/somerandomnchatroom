@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banned</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background: #f2f2f2;
+  }
+  .box {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 24px;
+    width: 340px;
+    text-align: center;
+  }
+  h2 { margin-top: 0; }
+  #reason {
+    margin-top: 10px;
+    padding: 10px;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    text-align: left;
+  }
+  button {
+    margin-top: 16px;
+    padding: 8px 14px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2>You've been banned</h2>
+  <p>Your account has been removed from this chat room.</p>
+  <div id="reason">Loading reason...</div>
+  <button id="signout-btn">Sign out</button>
+</div>
+
+<script type="module">
+import { auth, db } from "./firebase-config.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const reasonEl = document.getElementById("reason");
+const signoutBtn = document.getElementById("signout-btn");
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    reasonEl.textContent = "No reason on file.";
+    return;
+  }
+  const banSnap = await getDoc(doc(db, "bans", user.uid));
+  if (banSnap.exists()) {
+    reasonEl.textContent = "Reason: " + banSnap.data().reason;
+  } else {
+    // Not actually banned (or ban was lifted) - send them back in.
+    window.location.href = "index.html";
+  }
+});
+
+signoutBtn.addEventListener("click", () => signOut(auth));
+</script>
+
+</body>
+</html>
