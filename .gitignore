@@ -1,28 +1,24 @@
-# Firebase build and deployment files
-/firebase-debug.log
-/firebase-debug.*.log
-.firebaserc
+# Firebase CLI local state / logs
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.runtimeconfig.json
 
-# Firebase Hosting
-/firebase.json
-*.cache
-hosting/.cache
+# Actual secrets - if you ever add Cloud Functions or the Admin SDK,
+# THESE are the files that must never be committed (unlike firebase-config.js,
+# which only holds the public web client config).
+serviceAccountKey.json
+service-account*.json
+*.pem
+.env
+.env.*
 
-# Firebase Functions
-/functions/node_modules/
-/functions/.env
-/functions/package-lock.json
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
 
-# Firebase Emulators
-/firebase-*.zip
-/.firebase/
-/emulator-ui/
-
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Environment files (local configs)
-/.env.*
+# If you ever add Node tooling later
+node_modules/
